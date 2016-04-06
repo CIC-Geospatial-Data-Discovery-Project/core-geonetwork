@@ -2,34 +2,34 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
   xmlns:geonet="http://www.fao.org/geonetwork" xmlns:exslt="http://exslt.org/common"
   xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" exclude-result-prefixes="#all">
-  <!-- 
+  <!--
 		CSV search results export.
-		
+
 		Default formatting will be column header + all tags.
-		Sort order is schema based due to formatting which 
+		Sort order is schema based due to formatting which
 		could be different according to schema.
-		
+
 		In order to override default formatting, create a template
 		with mode="csv" in the layout/tpl-csv.xsl matching the root
 		element in order to create a one level tree structure :
 
-		Example to export only title from ISO19139 records.		
+		Example to export only title from ISO19139 records.
 		<pre>
 				<xsl:template match="gmd:MD_Metadata" mode="csv">
 					<xsl:param name="internalSep"/>
-					
+
 					<metadata>
 						<xsl:copy-of select="geonet:info"/>
-						
+
 						<xsl:copy-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title"/>
 						...
 					</metadata>
 				</xsl:template>
-					
+
 		</pre>
-		
+
 		The internal separator is used to join multiple objects in one
-		columns (eg. keywords will be keyword1###keyword2... and could be explode 
+		columns (eg. keywords will be keyword1###keyword2... and could be explode
 		if needed in a spreadsheet).
 	 -->
   <xsl:output method="text" version="1.0" encoding="utf-8" indent="no"/>
@@ -58,8 +58,8 @@
   <!-- Main template -->
   <xsl:template name="content" match="/">
 
-    <!-- Sort results first as csv output could be different from one schema to another. 
-		Create the sorted set based on the search response. Use the brief mode or the csv mode if 
+    <!-- Sort results first as csv output could be different from one schema to another.
+		Create the sorted set based on the search response. Use the brief mode or the csv mode if
 		available.
 		-->
     <xsl:variable name="sortedResults">
@@ -120,7 +120,7 @@
           <xsl:value-of select="$sep"/>
 
           <xsl:value-of
-            select="string-join($columns/schema[@name=$currentSchema]/column, 
+            select="string-join($columns/schema[@name=$currentSchema]/column,
 														$sep)"/>
 
           <xsl:call-template name="newLine"/>
@@ -141,8 +141,8 @@
     <xsl:param name="metadata"/>
 
     <xsl:value-of
-      select="concat('&quot;', $metadata/geonet:info/schema, '&quot;', $sep, 
-									'&quot;', $metadata/geonet:info/uuid, '&quot;', $sep, 
+      select="concat('&quot;', $metadata/geonet:info/schema, '&quot;', $sep,
+									'&quot;', $metadata/geonet:info/uuid, '&quot;', $sep,
 									'&quot;', $metadata/geonet:info/id, '&quot;', $sep)"/>
 
     <xsl:for-each select="$columns">
@@ -156,7 +156,7 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:value-of
-            select="replace(replace(string-join($metadata/*[name(.)=$currentColumn], $internalSep), '\n|\r\n', ''), '&quot;', '\\&quot;')"
+            select="replace(string-join($metadata/*[name(.)=$currentColumn], $internalSep), '\n|\r\n', '')"
           />
         </xsl:otherwise>
       </xsl:choose>

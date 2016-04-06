@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+FILE LOCATION: geonetwork/web/geonetwork/WEB-INF/data/config/schema_plugins/iso19139/layout/tpl-brief.xsl
+LINE NUMBER: 413
+-->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:gmd="http://www.isotc211.org/2005/gmd"
   xmlns:gco="http://www.isotc211.org/2005/gco"
@@ -14,7 +18,7 @@
 
   <xsl:include href="utility-fn.xsl"/>
   <xsl:include href="utility-tpl.xsl"/>
-  
+
   <!-- ===================================================================== -->
   <!-- === iso19139 brief formatting === -->
   <!-- ===================================================================== -->
@@ -62,7 +66,7 @@
     </xsl:if>
 
     <xsl:variable name="langId" select="gn-fn-iso19139:getLangId(., $lang)"/>
-    
+
     <xsl:apply-templates mode="briefster" select="gmd:identificationInfo/*">
       <xsl:with-param name="id" select="$id"/>
       <xsl:with-param name="langId" select="$langId"/>
@@ -187,11 +191,11 @@
       </xsl:choose>
 
 
-      <!-- 
+      <!--
           Internal category could be define using different informations
         in a metadata record (according to standard). This could be improved.
         This type of categories could be added to Lucene index also in order
-        to be queriable. 
+        to be queriable.
         Services and datasets are at least the required internal categories
         to be distinguished for INSPIRE requirements (hierarchyLevel could be
         use also). TODO
@@ -231,6 +235,14 @@
         </xsl:apply-templates>
       </abstract>
     </xsl:if>
+
+    <xsl:for-each select=".//gmd:linkage/gmd:URL">
+      <liiink>
+        <xsl:apply-templates mode="localised" select=".">
+          <xsl:with-param name="langId" select="$langId"/>
+        </xsl:apply-templates>
+      </liiink>
+    </xsl:for-each>
 
     <xsl:for-each select=".//gmd:keyword[not(@gco:nilReason)]">
       <keyword>
@@ -293,6 +305,7 @@
       </LegalConstraints>
     </xsl:for-each>
 
+
     <xsl:for-each select="gmd:extent/*/gmd:temporalElement/*/gmd:extent/gml:TimePeriod">
       <temporalExtent>
         <begin>
@@ -333,7 +346,7 @@
                       </image>
                     </xsl:when>
                     <xsl:otherwise>
-                      <!-- When harvested, thumbnail is stored in local node (eg. ogcwxs). 
+                      <!-- When harvested, thumbnail is stored in local node (eg. ogcwxs).
                         Only GeoNetHarvester set smallThumbnail elements.
                         -->
                       <image type="thumbnail">
@@ -397,4 +410,160 @@
     </xsl:for-each>
 
   </xsl:template>
+
+<!-- start of custom CSV exporting for CICada -->
+
+<xsl:template match="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract">
+  <xsl:param name="quote">"</xsl:param>
+  <xsl:param name="quotequote">""</xsl:param>
+  <xsl:value-of select='replace(.,$quote,$quotequote)'/>
+</xsl:template>
+
+<xsl:template match="gmd:MD_Metadata" mode="csv">
+  <xsl:param name="internalSep"/>
+
+  <xsl:variable name="langId" select="gn-fn-iso19139:getLangId(., $lang)"/>
+  <metadata>
+    <!-- add in our fields. What else? -->
+    <xsl:copy-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title"/>
+    <!-- <xsl:copy-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract"/> -->
+    <xsl:copy>
+      <xsl:apply-templates select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract"/>
+    </xsl:copy>
+    <xsl:copy-of select="dataSetURI"/>
+    <xsl:if test="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode[@codeListValue='originator']">
+        <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode[@codeListValue='originator']">
+            <originator>
+                <xsl:choose>
+                   <xsl:when test="ancestor-or-self::*/gmd:organisationName and not(ancestor-or-self::*/gmd:individualName)">
+                     <xsl:value-of select="ancestor-or-self::*/gmd:organisationName"/>
+                   </xsl:when>
+                   <xsl:when test="ancestor-or-self::*/gmd:individualName and not(ancestor-or-self::*/gmd:organizationName)">
+                     <xsl:for-each select="ancestor-or-self::*/gmd:individualName">
+                       <xsl:value-of select="ancestor-or-self::*/gmd:individualName"/>
+                       <xsl:if test="position() != last()">
+                         <xsl:text>,</xsl:text>
+                       </xsl:if>
+                     </xsl:for-each>
+                   </xsl:when>
+                   <xsl:when test="ancestor-or-self::*/gmd:individualName and ancestor-or-self::*/gmd:organizationName">
+                     <xsl:value-of select="ancestor-or-self::*/gmd:individualName"/>
+                     <xsl:text>, </xsl:text>
+                     <xsl:value-of select="ancestor-or-self::*/gmd:organisationName"/>
+                   </xsl:when>
+                 </xsl:choose>
+            </originator>
+        </xsl:for-each>
+    </xsl:if>
+    <xsl:if test="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode[@codeListValue='publisher']">
+        <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode[@codeListValue='publisher']">
+            <publisher>
+                <xsl:choose>
+                   <xsl:when test="ancestor-or-self::*/gmd:organisationName and not(ancestor-or-self::*/gmd:individualName)">
+                     <xsl:value-of select="ancestor-or-self::*/gmd:organisationName"/>
+                   </xsl:when>
+                   <xsl:when test="ancestor-or-self::*/gmd:individualName and not(ancestor-or-self::*/gmd:organizationName)">
+                     <xsl:for-each select="ancestor-or-self::*/gmd:individualName">
+                       <xsl:value-of select="ancestor-or-self::*/gmd:individualName"/>
+                       <xsl:if test="position() != last()">
+                         <xsl:text>,</xsl:text>
+                       </xsl:if>
+                     </xsl:for-each>
+                   </xsl:when>
+                   <xsl:when test="ancestor-or-self::*/gmd:individualName and ancestor-or-self::*/gmd:organizationName">
+                     <xsl:value-of select="ancestor-or-self::*/gmd:individualName"/>
+                     <xsl:text>, </xsl:text>
+                     <xsl:value-of select="ancestor-or-self::*/gmd:organisationName"/>
+                   </xsl:when>
+                 </xsl:choose>
+            </publisher>
+        </xsl:for-each>
+    </xsl:if>
+    <xsl:for-each select=".//gmd:MD_KeywordTypeCode[@codeListValue='place']/../../gmd:keyword[not(@gco:nilReason)]">
+      <keywords_place>
+        <xsl:apply-templates mode="localised" select=".">
+          <xsl:with-param name="langId" select="$langId"/>
+        </xsl:apply-templates>
+      </keywords_place>
+    </xsl:for-each>
+
+
+    <xsl:for-each select=".//gmd:MD_KeywordTypeCode[@codeListValue='theme']/../../gmd:keyword[not(@gco:nilReason)]">
+      <keywords_theme>
+        <xsl:apply-templates mode="localised" select=".">
+          <xsl:with-param name="langId" select="$langId"/>
+        </xsl:apply-templates>
+      </keywords_theme>
+    </xsl:for-each>
+
+    <xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource">
+	<xsl:if test="gmd:protocol/gco:CharacterString and gmd:protocol/gco:CharacterString!=''">
+		<xsl:choose>
+			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'download') or
+					contains(gmd:protocol/gco:CharacterString, 'FTP') or
+					contains(gmd:protocol/gco:CharacterString, 'HTTP')">
+				<link_download>
+					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+				</link_download>
+			</xsl:when>
+			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'WWW:LINK') or
+					contains(gmd:protocol/gco:CharacterString, 'information')">
+				<link_information>
+					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+				</link_information>
+			</xsl:when>
+			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'ESRI:ArcGIS')">
+				<link_service_esri>
+					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+				</link_service_esri>
+			</xsl:when>
+			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'OGC:WMS')">
+				<link_service_wms>
+					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+				</link_service_wms>
+			</xsl:when>
+			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'OGC:WFS')">
+				<link_service_wfs>
+					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+				</link_service_wfs>
+			</xsl:when>
+		</xsl:choose>
+	</xsl:if>
+	<xsl:if test="not(gmd:protocol) and gmd:linkage/gmd:URL and gmd:linkage/gmd:URL!=''">
+		<link_no_protocol>
+			<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+		</link_no_protocol>
+	</xsl:if>
+	<xsl:if test="gmd:protocol and not(contains(gmd:protocol/gco:CharacterString,'download') or
+			contains(gmd:protocol/gco:CharacterString, 'FTP') or
+			contains(gmd:protocol/gco:CharacterString, 'ftp') or
+			contains(gmd:protocol/gco:CharacterString, 'HTTP') or
+			contains(gmd:protocol/gco:CharacterString, 'http') or
+			contains(gmd:protocol/gco:CharacterString, 'WWW:LINK') or
+			contains(gmd:protocol/gco:CharacterString, 'information') or
+			contains(gmd:protocol/gco:CharacterString, 'ESRI:ArcGIS') or
+			contains(gmd:protocol/gco:CharacterString, 'OGC:WMS') or
+			contains(gmd:protocol/gco:CharacterString, 'OGC:WFS'))">
+		<link_invalid_protocol>
+			<xsl:copy-of select="gmd:protocol/gco:CharacterString"/>
+			<xsl:text> -- </xsl:text>
+			<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+		</link_invalid_protocol>
+	</xsl:if>
+    </xsl:for-each>
+
+<!--
+    <xsl:for-each
+      select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource">
+	<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+      </xsl:for-each>
+-->
+
+    <!-- copy geonet:info element in - has special metadata eg schema name  -->
+    <xsl:copy-of select="gn:info"/>
+  </metadata>
+</xsl:template>
+<!-- End of custom CSV export for CICada-->
+
+
 </xsl:stylesheet>

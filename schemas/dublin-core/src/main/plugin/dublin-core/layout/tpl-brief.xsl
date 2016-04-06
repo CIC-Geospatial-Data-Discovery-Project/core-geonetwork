@@ -52,7 +52,8 @@
       <!-- FIXME
       <image>IMAGE</image>
       -->
-      <!-- TODO : ows:BoundingBox -->
+   
+      <!-- TODO : ows:BoundingBox 
       <xsl:variable name="coverage" select="dc:coverage"/>
       <xsl:variable name="n" select="substring-after($coverage,'North ')"/>
       <xsl:variable name="north" select="substring-before($n,',')"/>
@@ -80,7 +81,7 @@
           </northBL>
         </geoBox>
       </xsl:if>
-
+-->
       <xsl:copy-of select="gn:*"/>
     </metadata>
   </xsl:template>
