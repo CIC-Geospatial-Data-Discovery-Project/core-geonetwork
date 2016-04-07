@@ -9,6 +9,8 @@
 		Under this element, <xsl:stylesheet>, add the following so Saxon can use the necessary types.
 		xmlns:saxon=”http://saxon.sf.net/” saxon:allow-all-built-in-types=”yes”
 		 *from http://dak1n1.com/blog/1-automating-gis-metadata-conversion/*
+		
+		kd 4/7/2016, changed language from eng; USA back to just eng, as it throws off GeoNetwork thesaurus
 -->
 <!--
 ======================================================================
@@ -1018,7 +1020,7 @@
 			</gmd:fileIdentifier>
 			<gmd:language>
 				<gco:CharacterString>
-					<xsl:sequence select="'eng; USA'"/>
+					<xsl:sequence select="'eng'"/>
 				</gco:CharacterString>
 			</gmd:language>
 			<gmd:characterSet>
@@ -3452,7 +3454,7 @@
 						</xsl:for-each>
 						<gmd:language>
 							<gco:CharacterString>
-								<xsl:sequence select="'eng; USA'"/>
+								<xsl:sequence select="'eng'"/>
 							</gco:CharacterString>
 						</gmd:language>
 						<xsl:for-each select="idinfo/keywords/theme">
