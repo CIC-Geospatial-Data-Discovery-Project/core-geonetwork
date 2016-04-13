@@ -54,8 +54,8 @@
       $scope.mdImportUploadOptions = {
         autoUpload: false,
         done: uploadImportMdDone,
-        fail: uploadImportMdError,
-        singleUpload: true
+        fail: uploadImportMdError
+        // singleUpload: true
       };
       /** --- */
 
