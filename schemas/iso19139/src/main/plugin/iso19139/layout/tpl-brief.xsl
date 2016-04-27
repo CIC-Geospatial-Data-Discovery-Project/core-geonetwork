@@ -424,13 +424,26 @@ LINE NUMBER: 413
 
   <xsl:variable name="langId" select="gn-fn-iso19139:getLangId(., $lang)"/>
   <metadata>
-    <!-- add in our fields. What else? -->
-    <xsl:copy-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title"/>
-    <!-- <xsl:copy-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract"/> -->
-    <xsl:copy>
-      <xsl:apply-templates select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract"/>
-    </xsl:copy>
-    <xsl:copy-of select="dataSetURI"/>
+
+    <title>
+        <xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title"/>
+    </title>
+
+    <abstract>
+        <xsl:copy>
+          <xsl:apply-templates select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract"/>
+        </xsl:copy>
+    </abstract>
+
+    <datasetURI>
+        <xsl:value-of select="gmd:dataSetURI"/>
+    </datasetURI>
+
+    <topic_categories>
+        <xsl:copy-of select="*//gmd:MD_TopicCategoryCode"/>
+    </topic_categories>
+
+    <!-- originator -->
     <xsl:if test="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode[@codeListValue='originator']">
         <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode[@codeListValue='originator']">
             <originator>
@@ -455,6 +468,8 @@ LINE NUMBER: 413
             </originator>
         </xsl:for-each>
     </xsl:if>
+
+    <!--publisher-->
     <xsl:if test="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode[@codeListValue='publisher']">
         <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode[@codeListValue='publisher']">
             <publisher>
@@ -479,6 +494,8 @@ LINE NUMBER: 413
             </publisher>
         </xsl:for-each>
     </xsl:if>
+
+    <!-- place keywords-->
     <xsl:for-each select=".//gmd:MD_KeywordTypeCode[@codeListValue='place']/../../gmd:keyword[not(@gco:nilReason)]">
       <keywords_place>
         <xsl:apply-templates mode="localised" select=".">
@@ -487,7 +504,7 @@ LINE NUMBER: 413
       </keywords_place>
     </xsl:for-each>
 
-
+    <!-- theme keywords-->
     <xsl:for-each select=".//gmd:MD_KeywordTypeCode[@codeListValue='theme']/../../gmd:keyword[not(@gco:nilReason)]">
       <keywords_theme>
         <xsl:apply-templates mode="localised" select=".">
@@ -496,68 +513,62 @@ LINE NUMBER: 413
       </keywords_theme>
     </xsl:for-each>
 
+    <!-- online resources :/ -->
     <xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource">
-	<xsl:if test="gmd:protocol/gco:CharacterString and gmd:protocol/gco:CharacterString!=''">
-		<xsl:choose>
-			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'download') or
-					contains(gmd:protocol/gco:CharacterString, 'FTP') or
-					contains(gmd:protocol/gco:CharacterString, 'HTTP')">
-				<link_download>
-					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
-				</link_download>
-			</xsl:when>
-			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'WWW:LINK') or
-					contains(gmd:protocol/gco:CharacterString, 'information')">
-				<link_information>
-					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
-				</link_information>
-			</xsl:when>
-			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'ESRI:ArcGIS')">
-				<link_service_esri>
-					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
-				</link_service_esri>
-			</xsl:when>
-			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'OGC:WMS')">
-				<link_service_wms>
-					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
-				</link_service_wms>
-			</xsl:when>
-			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'OGC:WFS')">
-				<link_service_wfs>
-					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
-				</link_service_wfs>
-			</xsl:when>
-		</xsl:choose>
-	</xsl:if>
-	<xsl:if test="not(gmd:protocol) and gmd:linkage/gmd:URL and gmd:linkage/gmd:URL!=''">
-		<link_no_protocol>
-			<xsl:copy-of select="gmd:linkage/gmd:URL"/>
-		</link_no_protocol>
-	</xsl:if>
-	<xsl:if test="gmd:protocol and not(contains(gmd:protocol/gco:CharacterString,'download') or
-			contains(gmd:protocol/gco:CharacterString, 'FTP') or
-			contains(gmd:protocol/gco:CharacterString, 'ftp') or
-			contains(gmd:protocol/gco:CharacterString, 'HTTP') or
-			contains(gmd:protocol/gco:CharacterString, 'http') or
-			contains(gmd:protocol/gco:CharacterString, 'WWW:LINK') or
-			contains(gmd:protocol/gco:CharacterString, 'information') or
-			contains(gmd:protocol/gco:CharacterString, 'ESRI:ArcGIS') or
-			contains(gmd:protocol/gco:CharacterString, 'OGC:WMS') or
-			contains(gmd:protocol/gco:CharacterString, 'OGC:WFS'))">
-		<link_invalid_protocol>
-			<xsl:copy-of select="gmd:protocol/gco:CharacterString"/>
-			<xsl:text> -- </xsl:text>
-			<xsl:copy-of select="gmd:linkage/gmd:URL"/>
-		</link_invalid_protocol>
-	</xsl:if>
+    	<xsl:if test="gmd:protocol/gco:CharacterString and gmd:protocol/gco:CharacterString!=''">
+    		<xsl:choose>
+    			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'download') or
+    					contains(gmd:protocol/gco:CharacterString, 'FTP') or
+    					contains(gmd:protocol/gco:CharacterString, 'HTTP')">
+    				<link_download>
+    					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+    				</link_download>
+    			</xsl:when>
+    			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'WWW:LINK') or
+    					contains(gmd:protocol/gco:CharacterString, 'information')">
+    				<link_information>
+    					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+    				</link_information>
+    			</xsl:when>
+    			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'ESRI:ArcGIS')">
+    				<link_service_esri>
+    					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+    				</link_service_esri>
+    			</xsl:when>
+    			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'OGC:WMS')">
+    				<link_service_wms>
+    					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+    				</link_service_wms>
+    			</xsl:when>
+    			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'OGC:WFS')">
+    				<link_service_wfs>
+    					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+    				</link_service_wfs>
+    			</xsl:when>
+    		</xsl:choose>
+    	</xsl:if>
+    	<xsl:if test="not(gmd:protocol) and gmd:linkage/gmd:URL and gmd:linkage/gmd:URL!=''">
+    		<link_no_protocol>
+    			<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+    		</link_no_protocol>
+    	</xsl:if>
+    	<xsl:if test="gmd:protocol and not(contains(gmd:protocol/gco:CharacterString,'download') or
+    			contains(gmd:protocol/gco:CharacterString, 'FTP') or
+    			contains(gmd:protocol/gco:CharacterString, 'ftp') or
+    			contains(gmd:protocol/gco:CharacterString, 'HTTP') or
+    			contains(gmd:protocol/gco:CharacterString, 'http') or
+    			contains(gmd:protocol/gco:CharacterString, 'WWW:LINK') or
+    			contains(gmd:protocol/gco:CharacterString, 'information') or
+    			contains(gmd:protocol/gco:CharacterString, 'ESRI:ArcGIS') or
+    			contains(gmd:protocol/gco:CharacterString, 'OGC:WMS') or
+    			contains(gmd:protocol/gco:CharacterString, 'OGC:WFS'))">
+    		<link_invalid_protocol>
+    			<xsl:copy-of select="gmd:protocol/gco:CharacterString"/>
+    			<xsl:text> -- </xsl:text>
+    			<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+    		</link_invalid_protocol>
+    	</xsl:if>
     </xsl:for-each>
-
-<!--
-    <xsl:for-each
-      select="gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource">
-	<xsl:copy-of select="gmd:linkage/gmd:URL"/>
-      </xsl:for-each>
--->
 
     <!-- copy geonet:info element in - has special metadata eg schema name  -->
     <xsl:copy-of select="gn:info"/>
