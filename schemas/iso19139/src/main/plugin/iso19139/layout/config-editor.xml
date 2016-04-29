@@ -1222,7 +1222,9 @@
       </tab>
     </view>
     <view name="default">
-      <tab id="default" mode="flat">
+
+      <tab id="default" default="true" mode="flat">
+
         <section xpath="/gmd:MD_Metadata/gmd:identificationInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo"/>
@@ -1279,113 +1281,6 @@
       -->
     </view>
 
-    <view name="cic-gddp">
-      <tab id="cic-gddp" default="true">
-            <section name="cic-gddp-identification">
-
-                <!-- title -->
-                <field
-                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
-
-                <!-- abstract -->
-                <field
-                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract"/>
-
-                <!-- originator -->
-                <field
-                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode[@codeListValue='originator']/../../gmd:CI_ResponsibleParty"/>
-
-                <!-- topic category(ies) -->
-                <field
-                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory"/>
-
-                <!-- place keywords -->
-
-            </section>
-
-            <section name="cic-gddp-keywords" xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:type/gmd:MD_KeywordTypeCode[@codeListValue='place']/../../..">
-
-            </section>
-
-
-            <section name="cic-gddp-temporal">
-
-                <!-- temporal extent -->
-                <field
-                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement"/>
-
-                <!-- date -->
-                <field
-                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='publication']/../../../gmd:CI_Date" />
-
-            </section>
-
-            <!--<section name="cic-gddp-distribution">-->
-
-            <!-- distribution section -->
-                <!-- distribution format (set list??) -->
-                <!-- linkage  -->
-                <!-- protocol -->
-
-            <!--</section>-->
-
-
-        <!--
-        <section xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo"/>
-        <section xpath="/gmd:MD_Metadata/gmd:spatialRepresentationInfo"/>
-        <section xpath="/gmd:MD_Metadata/gmd:distributionInfo"/>
-        <section xpath="/gmd:MD_Metadata/gmd:dataQualityInfo"/>
-        <section name="gmd:MD_Metadata">
-          <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
-          <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>
-          <field xpath="/gmd:MD_Metadata/gmd:characterSet"/>
-          <field xpath="/gmd:MD_Metadata/gmd:parentIdentifier" or="parentIdentifier"
-                 in="/gmd:MD_Metadata"/>
-          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevel" or="hierarchyLevel"
-                 in="/gmd:MD_Metadata"/>
-          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevelName" or="hierarchyLevelName"
-                 in="/gmd:MD_Metadata"/>
-          <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
-          <field xpath="/gmd:MD_Metadata/gmd:metadataStandardName"/>
-          <field xpath="/gmd:MD_Metadata/gmd:metadataStandardVersion"/>
-          <field xpath="/gmd:MD_Metadata/gmd:contact" or="contact" in="/gmd:MD_Metadata"/>
-          <field xpath="/gmd:MD_Metadata/gmd:dataSetURI" or="dataSetURI" in="/gmd:MD_Metadata"/>
-          <field xpath="/gmd:MD_Metadata/gmd:locale" or="locale" in="/gmd:MD_Metadata"/>
-          <field xpath="/gmd:MD_Metadata/gmd:series"/>
-          <field xpath="/gmd:MD_Metadata/gmd:describes"/>
-          <field xpath="/gmd:MD_Metadata/gmd:propertyType"/>
-          <field xpath="/gmd:MD_Metadata/gmd:featureType"/>
-          <field xpath="/gmd:MD_Metadata/gmd:featureAttribute"/>
-        </section>
-    -->
-      </tab>
-
-      <!-- Elements that should not use the "flat" mode -->
-      <flatModeExceptions>
-        <for name="gmd:descriptiveKeywords" />
-        <for name="gmd:keyword"/>
-        <for name="gmd:spatialResolution"/>
-        <for name="gmd:pointOfContact"/>
-        <for name="gmd:distributor"/>
-        <for name="gmd:contact"/>
-        <for name="gmd:processor"/>
-        <for name="gmd:topicCategory"/>
-      </flatModeExceptions>
-
-      <!--
-      To configure the type of transformations
-      or the number of keyword allowed for e
-      thesaurus define a specific configuration:
-
-      eg. only 2 INSPIRE themes with Anchor.
-
-      <thesaurusList>
-        <thesaurus key="external.theme.inspire-theme"
-                   maxtags="2"
-                   transformations="to-iso19139-keyword-with-anchor"/>
-      </thesaurusList>
-      -->
-    </view>
     <view name="advanced">
       <tab id="identificationInfo" default="true">
         <section xpath="/gmd:MD_Metadata/gmd:identificationInfo" or="identificationInfo"

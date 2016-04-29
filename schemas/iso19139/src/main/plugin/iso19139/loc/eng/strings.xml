@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
-    <!-- start CIC GDDP strings -->
-    <cic-gddp>CIC GDDP</cic-gddp>
-    <cic-gddp-identification>Identification (CIC)</cic-gddp-identification>
-    <cic-gddp-distribution>Distribution (CIC)</cic-gddp-distribution>
-    <cic-gddp-temporal>Temporal (CIC)</cic-gddp-temporal>
-    <cic-gddp-keywords-place>Place Keywords (CIC)</cic-gddp-keywords-place>
 
   <understandResource>Information about the dataset</understandResource>
   <relatedResources>Related services and linked data</relatedResources>
