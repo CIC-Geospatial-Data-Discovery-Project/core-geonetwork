@@ -439,6 +439,14 @@ LINE NUMBER: 413
         <xsl:value-of select="gmd:dataSetURI"/>
     </datasetURI>
 
+    <date_publication>
+        <xsl:value-of select="(gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='publication']/../../gmd:date/gco:Date | gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='publication']/../../gmd:date/gco:DateTime)[1]"/>
+    </date_publication>
+    
+    <date_revision>
+        <xsl:value-of select="(gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='revision']/../../gmd:date/gco:Date | gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='revision']/../../gmd:date/gco:DateTime)[1]"/>
+    </date_revision>
+
     <topic_categories>
         <xsl:copy-of select="*//gmd:MD_TopicCategoryCode"/>
     </topic_categories>
