@@ -1397,7 +1397,8 @@
 		<condition>mandatory</condition>
 		<helper rel="gmd:version">
 			<option value="Text">Text</option>
-			<option value="ESRI Shapefile" title="1.0">ESRI Shapefile</option>
+			<option value="Geodatabase">Geodatabase</option>
+			<option value="ESRI Shapefile" title="1.0">Shapefile</option>
 			<option value="Mapinfo MIF/MID" title="4.5">Mapinfo MIF/MID</option>
 			<option value="Mapinfo TAB">Mapinfo TAB</option>
 			<option value="KML">KML</option>
