@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <!-- start CIC GDDP strings -->
+  <default>CIC GDDP</default>
+    <cic-gddp>CIC GDDP</cic-gddp>
+    <cic-gddp-identification>Identification (CIC)</cic-gddp-identification>
+    <cic-gddp-distribution>Distribution (CIC)</cic-gddp-distribution>
+    <cic-gddp-temporal>Temporal (CIC)</cic-gddp-temporal>
+    <cic-gddp-keywords>Place Keywords (CIC)</cic-gddp-keywords>
+   <cic-gddp-metadata>Metadata (CIC)</cic-gddp-metadata>
+
   <understandResource>Information about the dataset</understandResource>
   <relatedResources>Related services and linked data</relatedResources>
   <techInfo>Technical information</techInfo>
@@ -10,11 +19,11 @@
   <constraintInfo>Access constraint information</constraintInfo>
   <xml_iso19139>Save this metadata as an ISO19139 XML file</xml_iso19139>
   <xml_iso19139Tooai_dc>Save this metadata as an OAI Dublin Core XML file</xml_iso19139Tooai_dc>
-  
+
   <!-- New strings added for the AngularJS editor -->
   <!-- View and tabs -->
   <advanced>Full</advanced>
-  <default>Simple</default>
+  
   <simple>Simple</simple>
   <inspire>INSPIRE</inspire>
   <resource>Resource</resource>
