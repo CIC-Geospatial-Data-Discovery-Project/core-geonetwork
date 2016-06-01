@@ -582,6 +582,63 @@ LINE NUMBER: 413
     	</xsl:if>
     </xsl:for-each>
 
+    <!-- distributor online resources :/ -->
+    <xsl:for-each select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorTransferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource">
+    	<xsl:if test="gmd:protocol/gco:CharacterString and gmd:protocol/gco:CharacterString!=''">
+    		<xsl:choose>
+    			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'download') or
+    					contains(gmd:protocol/gco:CharacterString, 'FTP') or
+    					contains(gmd:protocol/gco:CharacterString, 'HTTP')">
+    				<distributor_link_download>
+    					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+    				</distributor_link_download>
+    			</xsl:when>
+    			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'WWW:LINK') or
+    					contains(gmd:protocol/gco:CharacterString, 'information')">
+    				<distributor_link_information>
+    					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+    				</distributor_link_information>
+    			</xsl:when>
+    			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'ESRI:ArcGIS')">
+    				<distributor_link_service_esri>
+    					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+    				</distributor_link_service_esri>
+    			</xsl:when>
+    			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'OGC:WMS')">
+    				<distributor_link_service_wms>
+    					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+    				</distributor_link_service_wms>
+    			</xsl:when>
+    			<xsl:when test="contains(gmd:protocol/gco:CharacterString, 'OGC:WFS')">
+    				<distributor_link_service_wfs>
+    					<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+    				</distributor_link_service_wfs>
+    			</xsl:when>
+    		</xsl:choose>
+    	</xsl:if>
+    	<xsl:if test="not(gmd:protocol) and gmd:linkage/gmd:URL and gmd:linkage/gmd:URL!=''">
+    		<distributor_link_no_protocol>
+    			<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+    		</distributor_link_no_protocol>
+    	</xsl:if>
+    	<xsl:if test="gmd:protocol and not(contains(gmd:protocol/gco:CharacterString,'download') or
+    			contains(gmd:protocol/gco:CharacterString, 'FTP') or
+    			contains(gmd:protocol/gco:CharacterString, 'ftp') or
+    			contains(gmd:protocol/gco:CharacterString, 'HTTP') or
+    			contains(gmd:protocol/gco:CharacterString, 'http') or
+    			contains(gmd:protocol/gco:CharacterString, 'WWW:LINK') or
+    			contains(gmd:protocol/gco:CharacterString, 'information') or
+    			contains(gmd:protocol/gco:CharacterString, 'ESRI:ArcGIS') or
+    			contains(gmd:protocol/gco:CharacterString, 'OGC:WMS') or
+    			contains(gmd:protocol/gco:CharacterString, 'OGC:WFS'))">
+    		<distributor_link_invalid_protocol>
+    			<xsl:copy-of select="gmd:protocol/gco:CharacterString"/>
+    			<xsl:text> -- </xsl:text>
+    			<xsl:copy-of select="gmd:linkage/gmd:URL"/>
+    		</distributor_link_invalid_protocol>
+    	</xsl:if>
+    </xsl:for-each>
+
     <!-- copy geonet:info element in - has special metadata eg schema name  -->
     <xsl:copy-of select="gn:info"/>
   </metadata>
