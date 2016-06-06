@@ -1284,46 +1284,86 @@
 
                 <!-- title -->
                 <field
-                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"/>
+                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"
+                    or="title"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation"/>
 
                 <!-- abstract -->
                 <field
-                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract"/>
-
-                <!-- originator -->
-                <field
-                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode[@codeListValue='originator']/../../gmd:CI_ResponsibleParty"/>
+                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract"
+                    or="abstract"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"/>
 
                 <!-- topic category(ies) -->
                 <field
-                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory/gmd:MD_TopicCategoryCode"/>
-
-            </section>
-
-            <section name="cic-gddp-temporal">
-
-                <!-- temporal extent -->
-                <field
-                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement"/>
-
-                <!-- date -->
-                <field
-                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='publication']/../../../gmd:CI_Date" />
-
-            </section>
-        </tab>
-        <tab id="cic-gddp-keywords">
-            <!-- TODO break into its own tab -->
-            <section name="cic-gddp-keywords">
-              <!-- keywords -->
-             <field
-                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
-                  gmd:descriptiveKeywords"
-                  or="descriptiveKeywords"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory"
+                  or="topicCategory"
                   in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"/>
 
+                <!-- originator/publisher/pt of contact -->
+                <field
+                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:citedResponsibleParty"
+                    or="citedResponsibleParty"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation"/>
+
+
             </section>
 
+            <section name="cic-gddp-extents-dates">
+
+                <!-- dates -->
+                <field
+                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date"
+                    or="date"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation"/>
+
+                <!-- temporal extent -->
+                <field name="temporalRangeSection" templateModeOnly="true"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+                  <template>
+                    <values>
+                      <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
+                      <key label="beginPosition"
+                        xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
+                        use="gn-date-picker"
+                        tooltip="gmd:extent|gmd:EX_TemporalExtent">
+                        <directiveAttributes data-tag-name="gml:beginPosition"/>
+                      </key>
+                      <key label="endPosition"
+                        xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
+                        use="gn-date-picker"
+                        tooltip="gmd:extent|gmd:EX_TemporalExtent"
+                      >
+                        <directiveAttributes
+                            data-tag-name="gml:endPosition"
+                            data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+                      </key>
+                    </values>
+                    <snippet>
+                      <gmd:temporalElement>
+                        <gmd:EX_TemporalExtent>
+                          <gmd:extent>
+                            <gml:TimePeriod gml:id="">
+                              {{beginPosition}}
+                              {{endPosition}}
+                            </gml:TimePeriod>
+                          </gmd:extent>
+                        </gmd:EX_TemporalExtent>
+                      </gmd:temporalElement>
+                    </snippet>
+                  </template>
+                </field>
+
+                </section>
+        </tab>
+
+        <tab id="cic-gddp-keywords">
+
+            <section name="cic-gddp-keywords"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords"
+                  or="descriptiveKeywords"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"/>
 
         </tab>
 
@@ -1331,16 +1371,10 @@
 
             <section name="cic-gddp-distribution">
 
-              <!-- distribution section -->
-                  <!-- distribution format (set list??) -->
-                  <!-- linkage  -->
-                  <!-- protocol -->
               <field xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"
                     or="distributionFormat"
                     in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution"></field>
-              <field xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorTransferOptions"
-                  or="distributorTransferOptions"
-                  in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor"></field>
+              <field xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorTransferOptions"/>
               <field xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions"
                     or="transferOptions"
                     in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution"></field>
