@@ -23,11 +23,6 @@
   <!-- New strings added for the AngularJS editor -->
   <!-- View and tabs -->
   <advanced>Full</advanced>
-<<<<<<< HEAD
-  <default>Simple</default>
-=======
-
->>>>>>> cicgddp-editor-view
   <simple>Simple</simple>
   <inspire>INSPIRE</inspire>
   <resource>Resource</resource>
