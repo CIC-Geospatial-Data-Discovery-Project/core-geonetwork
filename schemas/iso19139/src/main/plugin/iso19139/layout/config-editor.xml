@@ -1220,9 +1220,10 @@
         </section>
       </tab>
     </view>
-    <view name="default">
 
-      <tab id="default" default="true" mode="flat">
+    <view name="simple">
+
+      <tab id="simple" default="true" mode="flat">
 
         <section xpath="/gmd:MD_Metadata/gmd:identificationInfo"/>
         <section xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo"/>
@@ -1281,7 +1282,7 @@
     </view>
 
     <view name="cic-gddp">
-      <tab id="default" default="true" >
+      <tab id="default" default="true">
             <section name="cic-gddp-identification">
 
                 <!-- title -->
