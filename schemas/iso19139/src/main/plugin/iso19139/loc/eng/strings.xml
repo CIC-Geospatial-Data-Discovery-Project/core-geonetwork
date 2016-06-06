@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <strings>
+    <!-- start CIC GDDP strings -->
+  <default>CIC GDDP</default>
+    <cic-gddp>CIC GDDP</cic-gddp>
+    <cic-gddp-identification>Identification</cic-gddp-identification>
+    <cic-gddp-distribution>Distribution</cic-gddp-distribution>
+    <cic-gddp-extents-dates>Extents and Dates</cic-gddp-extents-dates>
+    <cic-gddp-keywords>Keywords</cic-gddp-keywords>
+   <cic-gddp-metadata>Metadata</cic-gddp-metadata>
 
   <understandResource>Information about the dataset</understandResource>
   <relatedResources>Related services and linked data</relatedResources>
@@ -15,7 +23,11 @@
   <!-- New strings added for the AngularJS editor -->
   <!-- View and tabs -->
   <advanced>Full</advanced>
+<<<<<<< HEAD
   <default>Simple</default>
+=======
+
+>>>>>>> cicgddp-editor-view
   <simple>Simple</simple>
   <inspire>INSPIRE</inspire>
   <resource>Resource</resource>

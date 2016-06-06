@@ -143,7 +143,6 @@
     <name>gmd:processStep</name>
     <name>gmd:lineage</name>
     <name>gmd:centerPoint</name>
-    <name>gmd:verticalCRS</name>
     <name>gml:verticalCS</name>
     <name>gml:verticalDatum</name>
     <name>gmd:identifier</name>
@@ -1265,6 +1264,150 @@
         <for name="gmd:processor"/>
         <for name="gmd:topicCategory"/>
       </flatModeExceptions>
+
+      <!--
+      To configure the type of transformations
+      or the number of keyword allowed for e
+      thesaurus define a specific configuration:
+
+      eg. only 2 INSPIRE themes with Anchor.
+
+      <thesaurusList>
+        <thesaurus key="external.theme.inspire-theme"
+                   maxtags="2"
+                   transformations="to-iso19139-keyword-with-anchor"/>
+      </thesaurusList>
+      -->
+    </view>
+
+    <view name="cic-gddp">
+      <tab id="default" default="true" >
+            <section name="cic-gddp-identification">
+
+                <!-- title -->
+                <field
+                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title"
+                    or="title"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation"/>
+
+                <!-- abstract -->
+                <field
+                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:abstract"
+                    or="abstract"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"/>
+
+                <!-- topic category(ies) -->
+                <field
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:topicCategory"
+                  or="topicCategory"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"/>
+
+                <!-- originator/publisher/pt of contact -->
+                <field
+                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:citedResponsibleParty"
+                    or="citedResponsibleParty"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation"/>
+
+
+            </section>
+
+            <section name="cic-gddp-extents-dates">
+
+                <!-- dates -->
+                <field
+                    xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date"
+                    or="date"
+                    in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation"/>
+
+                <!-- temporal extent -->
+                <field name="temporalRangeSection" templateModeOnly="true"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement"
+                  if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
+                  <template>
+                    <values>
+                      <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
+                      <key label="beginPosition"
+                        xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
+                        use="gn-date-picker"
+                        tooltip="gmd:extent|gmd:EX_TemporalExtent">
+                        <directiveAttributes data-tag-name="gml:beginPosition"/>
+                      </key>
+                      <key label="endPosition"
+                        xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition"
+                        use="gn-date-picker"
+                        tooltip="gmd:extent|gmd:EX_TemporalExtent"
+                      >
+                        <directiveAttributes
+                            data-tag-name="gml:endPosition"
+                            data-indeterminate-position="eval#gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:endPosition/@indeterminatePosition"/>
+                      </key>
+                    </values>
+                    <snippet>
+                      <gmd:temporalElement>
+                        <gmd:EX_TemporalExtent>
+                          <gmd:extent>
+                            <gml:TimePeriod gml:id="">
+                              {{beginPosition}}
+                              {{endPosition}}
+                            </gml:TimePeriod>
+                          </gmd:extent>
+                        </gmd:EX_TemporalExtent>
+                      </gmd:temporalElement>
+                    </snippet>
+                  </template>
+                </field>
+
+                </section>
+        </tab>
+
+        <tab id="cic-gddp-keywords">
+
+            <section name="cic-gddp-keywords"
+                  xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords"
+                  or="descriptiveKeywords"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification"/>
+
+        </tab>
+
+        <tab id="cic-gddp-distribution">
+
+            <section name="cic-gddp-distribution">
+
+              <field xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat"
+                    or="distributionFormat"
+                    in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution"></field>
+              <field xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorTransferOptions"/>
+              <field xpath="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions"
+                    or="transferOptions"
+                    in="/gmd:MD_Metadata/gmd:distributionInfo/gmd:MD_Distribution"></field>
+
+            </section>
+      </tab>
+
+      <tab id="cic-gddp-metadata">
+        <section name="metadata">
+          <field xpath="/gmd:MD_Metadata/gmd:fileIdentifier"/>
+          <field xpath="/gmd:MD_Metadata/gmd:language" or="language" in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:characterSet"/>
+          <field xpath="/gmd:MD_Metadata/gmd:parentIdentifier" or="parentIdentifier"
+            in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevel" or="hierarchyLevel"
+            in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:hierarchyLevelName" or="hierarchyLevelName"
+            in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:dateStamp"/>
+          <field xpath="/gmd:MD_Metadata/gmd:metadataStandardName"/>
+          <field xpath="/gmd:MD_Metadata/gmd:metadataStandardVersion"/>
+          <field xpath="/gmd:MD_Metadata/gmd:contact" or="contact" in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:dataSetURI" or="dataSetURI" in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:locale" or="locale" in="/gmd:MD_Metadata"/>
+          <field xpath="/gmd:MD_Metadata/gmd:series"/>
+          <field xpath="/gmd:MD_Metadata/gmd:describes"/>
+          <field xpath="/gmd:MD_Metadata/gmd:propertyType"/>
+          <field xpath="/gmd:MD_Metadata/gmd:featureType"/>
+          <field xpath="/gmd:MD_Metadata/gmd:featureAttribute"/>
+        </section>
+      </tab>
 
       <!--
       To configure the type of transformations
