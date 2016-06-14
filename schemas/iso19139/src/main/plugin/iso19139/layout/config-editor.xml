@@ -1326,7 +1326,7 @@
                   if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
                   <template>
                     <values>
-                      <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
+
                       <key label="beginPosition"
                         xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
                         use="gn-date-picker"
@@ -1356,7 +1356,7 @@
                       </gmd:temporalElement>
                     </snippet>
                   </template>
-                </field>
+              </field>
 
                 </section>
         </tab>

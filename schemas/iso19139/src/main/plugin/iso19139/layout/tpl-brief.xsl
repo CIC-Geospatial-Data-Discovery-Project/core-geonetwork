@@ -425,6 +425,14 @@ LINE NUMBER: 413
   <xsl:variable name="langId" select="gn-fn-iso19139:getLangId(., $lang)"/>
   <metadata>
 
+      <!-- copy geonet:info element in - has special metadata eg schema name  -->
+      <xsl:copy-of select="gn:info"/>
+      <xsl:variable name="info" select="gn:info"/>
+      <xsl:variable name="owner" select="$info/owner"/>
+      <owner>
+          <xsl:value-of select="$owner"/>
+      </owner>
+
     <title>
         <xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title"/>
     </title>
@@ -639,8 +647,7 @@ LINE NUMBER: 413
     	</xsl:if>
     </xsl:for-each>
 
-    <!-- copy geonet:info element in - has special metadata eg schema name  -->
-    <xsl:copy-of select="gn:info"/>
+
   </metadata>
 </xsl:template>
 <!-- End of custom CSV export for CICada-->

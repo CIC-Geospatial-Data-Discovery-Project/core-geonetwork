@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<strings>
+    <schematron.title>CICGDDP Rules</schematron.title>
+    <M1>[Title] - Metadata must have a title.</M1>
+    <alert.M1>
+        <div>Check that the metadata has a title</div>
+    </alert.M1>
+    <report.M1>Metadata title is:</report.M1>
+
+    <M2>[Abstract] - Metadata must have a abstract.</M2>
+    <alert.M2>
+        <div>Check that the metadata has a abstract</div>
+    </alert.M2>
+    <report.M2>Metadata abstract is:</report.M2>
+
+    <M3>[Topic Category] - Metadata must have at least one topic category.</M3>
+    <alert.M3>
+        <div>Check that the metadata has at least one topic category assigned</div>
+    </alert.M3>
+    <report.M3>Metadata topic category is:</report.M3>
+
+    <M4>[Publisher] - Metadata must have a publisher.</M4>
+    <alert.M41>
+        <div>Check that the metadata has a publisher defined in the Citation.</div>
+    </alert.M41>
+    <alert.M42>
+        <div>Check that the publisher in the Citation has either an orgainzation or individual name.</div>
+    </alert.M42>
+    <report.M4>Publisher is:</report.M4>
+
+    <M5>[Originator] - Metadata must have an originator.</M5>
+    <alert.M51>
+        <div>Check that the metadata has an originator defined in the Citation.</div>
+    </alert.M51>
+    <alert.M52>
+        <div>Check that the originator in the Citation has either an orgainzation or individual name.</div>
+    </alert.M52>
+    <report.M5>Originator is:</report.M5>
+
+    <M6>[Publication Date] - Metadata must have a publication date.</M6>
+    <alert.M6>
+        <div>Check that the metadata has a valid date or date-time with type set to "publication".</div>
+    </alert.M6>
+    <report.M6>Publication Date is:</report.M6>
+
+    <M7>[Distribution Format] - Metadata must have a distribution format.</M7>
+    <alert.M7>
+        <div>Check that the metadata has a valid distribution format.</div>
+    </alert.M7>
+    <report.M7>Distribution Format is:</report.M7>
+</strings>
