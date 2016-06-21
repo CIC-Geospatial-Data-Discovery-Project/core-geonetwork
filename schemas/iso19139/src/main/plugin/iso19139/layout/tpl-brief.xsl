@@ -425,6 +425,14 @@ LINE NUMBER: 413
   <xsl:variable name="langId" select="gn-fn-iso19139:getLangId(., $lang)"/>
   <metadata>
 
+      <!-- copy geonet:info element in - has special metadata eg schema name  -->
+      <xsl:copy-of select="gn:info"/>
+      <xsl:variable name="info" select="gn:info"/>
+      <xsl:variable name="ownername" select="$info/ownername"/>
+      <owner>
+          <xsl:value-of select="$ownername"/>
+      </owner>
+
     <title>
         <xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:title"/>
     </title>
@@ -447,6 +455,18 @@ LINE NUMBER: 413
         <xsl:value-of select="(gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='revision']/../../gmd:date/gco:Date | gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode[@codeListValue='revision']/../../gmd:date/gco:DateTime)[1]"/>
     </date_revision>
 
+    <temporal_extent_start>
+        <xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:beginPosition"/>
+    </temporal_extent_start>
+
+    <temporal_extent_end>
+        <xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/gml:endPosition"/>
+    </temporal_extent_end>
+
+    <temporal_extent_instant>
+        <xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimeInstant/gml:beginPosition"/>
+    </temporal_extent_instant>
+
     <topic_categories>
         <xsl:copy-of select="*//gmd:MD_TopicCategoryCode"/>
     </topic_categories>
@@ -454,6 +474,15 @@ LINE NUMBER: 413
     <distribution_format>
         <xsl:value-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString"/>
     </distribution_format>
+
+    <spatial_representation>
+        <xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:spatialRepresentationType/gmd:MD_SpatialRepresentationTypeCode/@codeListValue"/>
+    </spatial_representation>
+
+    <geometric_object_type>
+        <xsl:value-of select="gmd:spatialRepresentationInfo/gmd:MD_VectorSpatialRepresentation/gmd:geometricObjects/gmd:MD_GeometricObjects/gmd:geometricObjectType/gmd:MD_GeometricObjectTypeCode/@codeListValue"/>
+    </geometric_object_type>
+
 
     <!-- originator -->
     <xsl:if test="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:citedResponsibleParty/gmd:CI_ResponsibleParty/gmd:role/gmd:CI_RoleCode[@codeListValue='originator']">
@@ -514,6 +543,24 @@ LINE NUMBER: 413
           <xsl:with-param name="langId" select="$langId"/>
         </xsl:apply-templates>
       </keywords_place>
+    </xsl:for-each>
+
+    <!-- gemet theme keywords-->
+    <xsl:for-each select=".//gmd:MD_Keywords[gmd:thesaurusName/gmd:CI_Citation/gmd:title/gco:CharacterString/text() = 'GEMET']/gmd:keyword/*/text()">
+      <keywords_theme_gemet>
+        <xsl:apply-templates mode="localised" select=".">
+          <xsl:with-param name="langId" select="$langId"/>
+        </xsl:apply-templates>
+      </keywords_theme_gemet>
+    </xsl:for-each>
+
+    <!-- theme keywords-->
+    <xsl:for-each select=".//gmd:MD_KeywordTypeCode[@codeListValue='theme']/../../gmd:keyword[not(@gco:nilReason)]">
+      <keywords_theme>
+        <xsl:apply-templates mode="localised" select=".">
+          <xsl:with-param name="langId" select="$langId"/>
+        </xsl:apply-templates>
+      </keywords_theme>
     </xsl:for-each>
 
     <!-- theme keywords-->
@@ -639,8 +686,7 @@ LINE NUMBER: 413
     	</xsl:if>
     </xsl:for-each>
 
-    <!-- copy geonet:info element in - has special metadata eg schema name  -->
-    <xsl:copy-of select="gn:info"/>
+
   </metadata>
 </xsl:template>
 <!-- End of custom CSV export for CICada-->

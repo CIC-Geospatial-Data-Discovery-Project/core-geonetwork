@@ -8,6 +8,8 @@
     <cic-gddp-extents-dates>Extents and Dates</cic-gddp-extents-dates>
     <cic-gddp-keywords>Keywords</cic-gddp-keywords>
    <cic-gddp-metadata>Metadata</cic-gddp-metadata>
+   <cic-spatial-extent-and-ref-system>Spatial</cic-spatial-extent-and-ref-system>
+   <!-- end CIC GDDP strings -->
 
   <understandResource>Information about the dataset</understandResource>
   <relatedResources>Related services and linked data</relatedResources>

@@ -1326,7 +1326,7 @@
                   if="count(gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification) > 0">
                   <template>
                     <values>
-                      <!-- -Need a * for gml:TimePeriodTypeCHOICE_ELEMENT2 added by editor enumerated tree -->
+
                       <key label="beginPosition"
                         xpath="gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod/*/gml:beginPosition"
                         use="gn-date-picker"
@@ -1356,9 +1356,91 @@
                       </gmd:temporalElement>
                     </snippet>
                   </template>
-                </field>
+              </field>
 
                 </section>
+        </tab>
+
+        <tab id="cic-spatial-extent-and-ref-system">
+            <section name="bboxesSection">
+              <field
+                xpath="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification/
+                gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox"/>
+
+
+                <action type="add" name="extent" or="extent"
+                  in="/gmd:MD_Metadata/gmd:identificationInfo/gmd:MD_DataIdentification">
+                  <template>
+                    <snippet>
+                      <gmd:extent>
+                        <gmd:EX_Extent>
+                          <gmd:geographicElement>
+                            <gmd:EX_GeographicBoundingBox>
+                              <gmd:westBoundLongitude>
+                                <gco:Decimal/>
+                              </gmd:westBoundLongitude>
+                              <gmd:eastBoundLongitude>
+                                <gco:Decimal/>
+                              </gmd:eastBoundLongitude>
+                              <gmd:southBoundLatitude>
+                                <gco:Decimal/>
+                              </gmd:southBoundLatitude>
+                              <gmd:northBoundLatitude>
+                                <gco:Decimal/>
+                              </gmd:northBoundLatitude>
+                            </gmd:EX_GeographicBoundingBox>
+                          </gmd:geographicElement>
+                        </gmd:EX_Extent>
+                      </gmd:extent>
+                    </snippet>
+                  </template>
+                </action>
+
+                <field name="rsIdentifier" templateModeOnly="true"
+                  xpath="/gmd:MD_Metadata/gmd:referenceSystemInfo/gmd:MD_ReferenceSystem/gmd:referenceSystemIdentifier"
+                  del="../..">
+                  <template>
+                    <values>
+                      <key label="code"
+                           xpath="gmd:RS_Identifier/gmd:code/gco:CharacterString"
+                           tooltip="gmd:MD_ReferenceSystem"/>
+                      <!-- TODO: Get the helper -->
+                    </values>
+                    <snippet>
+                      <gmd:referenceSystemIdentifier>
+                        <gmd:RS_Identifier>
+                          <gn:copy select="gmd:authority"/>
+                          <gmd:code>
+                            <gco:CharacterString>{{code}}</gco:CharacterString>
+                          </gmd:code>
+                          <gn:copy select="gmd:codeSpace"/>
+                          <gn:copy select="gmd:version"/>
+                        </gmd:RS_Identifier>
+                      </gmd:referenceSystemIdentifier>
+                    </snippet>
+                  </template>
+                </field>
+
+
+                <action type="add" name="rsIdentifier" addDirective="data-gn-crs-selector"
+                  or="referenceSystemInfo" in="/gmd:MD_Metadata">
+                  <template>
+                    <snippet>
+                      <gmd:referenceSystemInfo>
+                        <gmd:MD_ReferenceSystem>
+                          <gmd:referenceSystemIdentifier>
+                            <gmd:RS_Identifier>
+                              <gmd:code>
+                                <gco:CharacterString/>
+                              </gmd:code>
+                            </gmd:RS_Identifier>
+                          </gmd:referenceSystemIdentifier>
+                        </gmd:MD_ReferenceSystem>
+                      </gmd:referenceSystemInfo>
+                    </snippet>
+                  </template>
+                </action>
+            </section>
         </tab>
 
         <tab id="cic-gddp-keywords">
