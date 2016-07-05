@@ -467,9 +467,13 @@ LINE NUMBER: 413
         <xsl:value-of select="gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimeInstant/gml:beginPosition"/>
     </temporal_extent_instant>
 
-    <topic_categories>
-        <xsl:copy-of select="*//gmd:MD_TopicCategoryCode"/>
-    </topic_categories>
+
+    <xsl:for-each select="*//gmd:topicCategory">
+        <topic_categories>
+            <xsl:copy-of select="gmd:MD_TopicCategoryCode"/>
+        </topic_categories>
+    </xsl:for-each>
+
 
     <distribution_format>
         <xsl:value-of select="gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString"/>
